@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { methods as scrapingController } from './controllers/scrapingController';
+import { methods as scrapingController } from './controllers/scrappingcontroller';
 
 const app = express();
 const port = process.env.PORT || 3000;
