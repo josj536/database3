@@ -2,13 +2,10 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { methods as scrapingController } from './controllers/scrappingcontroller.js';
 
-// Configuración de dotenv
-dotenv.config();
-
 const app = express();
 
-// Leer puerto desde variables de entorno
-const port = 3000;
+// Leer puerto desde variables de entorno o usar un valor por defecto
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
