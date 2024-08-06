@@ -1,5 +1,4 @@
-import puppeteer from 'puppeteer-core';
-import chromium from 'chrome-aws-lambda';
+import puppeteer from 'puppeteer';
 
 const scrapeAndStoreData = async (req, res) => {
     const { placa } = req.body;
