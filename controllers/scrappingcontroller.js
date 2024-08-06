@@ -1,4 +1,5 @@
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
+import chromium from 'chrome-aws-lambda';
 
 const scrapeAndStoreData = async (req, res) => {
     const { placa } = req.body;
@@ -10,10 +11,13 @@ const scrapeAndStoreData = async (req, res) => {
     }
 
     try {
-        const browser = await puppeteer.launch({
-            headless: true,
-            executablePath: '/usr/bin/google-chrome' // Especifica la ruta del ejecutable
+        // Lanza Chromium con las opciones adecuadas
+        const browser = await chromium.puppeteer.launch({
+            args: chromium.args,
+            executablePath: await chromium.executablePath,
+            headless: chromium.headless,
         });
+
         const page = await browser.newPage();
         
         await page.setViewport({ width: 1200, height: 800 });
@@ -127,3 +131,4 @@ const scrapeAndStoreData = async (req, res) => {
 export const methods = {
     scrapeAndStoreData,
 };
+
