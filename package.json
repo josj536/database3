@@ -4,7 +4,7 @@
   "description": "API para scraping de datos",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
     "postinstall": "npx puppeteer install"
   },
   "dependencies": {
