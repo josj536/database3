@@ -10,7 +10,7 @@ const scrapeAndStoreData = async (req, res) => {
     }
 
     try {
-        const browser = await puppeteer.launch({ headless: false });
+        const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
         
         await page.setViewport({ width: 1200, height: 800 });
@@ -116,8 +116,8 @@ const scrapeAndStoreData = async (req, res) => {
         res.json(resultadosConPlaca);
 
     } catch (error) {
-        console.error('Error en el scraping:', error.message);
-        res.status(500).send('Error en el scraping');
+        console.error('Error en el scraping:', error);
+        res.status(500).send(`Error en el scraping: ${error.message}`);
     }
 };
 
