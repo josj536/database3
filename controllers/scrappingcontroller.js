@@ -10,7 +10,9 @@ const scrapeAndStoreData = async (req, res) => {
     }
 
     try {
-        const browser = await puppeteer.launch({ headless: true'});
+        const browser = await puppeteer.launch({ headless: true,
+            executablePath: '/usr/bin/chromium', // Ajusta esta ruta según el resultado de `which`
+            args: ['--no-sandbox', '--disable-setuid-sandbox'] // Opcional, puede ayudar a evitar problemas de sandboxing});
         const page = await browser.newPage();
         
         await page.setViewport({ width: 1200, height: 800 });
