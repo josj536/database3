@@ -19,7 +19,10 @@ jobs:
           node-version: '20.x'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install
+          npm install puppeteer
+          npm install @sparticuz/chrome
 
       - name: Build and Test
         run: |
@@ -52,6 +55,10 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
+
+      - name: Install Puppeteer dependencies
+        run: |
+          npm install @sparticuz/chrome
 
       - name: Login to Azure
         uses: azure/login@v2
