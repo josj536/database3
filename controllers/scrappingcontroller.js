@@ -13,7 +13,7 @@ const scrapeAndStoreData = async (req, res) => {
         // Lanza Chromium con las opciones adecuadas
         const browser = await puppeteer.launch({
             headless: true,
-            executablePath: '/usr/bin/chromium-browser' || puppeteer.executablePath(), // Usa la ruta del ejecutable configurada
+            executablePath: '/usr/bin/google-chrome' || puppeteer.executablePath(), // Usa la ruta del ejecutable configurada
         });
 
         const page = await browser.newPage();
