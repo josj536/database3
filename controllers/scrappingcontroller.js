@@ -10,14 +10,13 @@ const scrapeAndStoreData = async (req, res) => {
     }
 
     try {
-        const browser = await puppeteer.launch({ headless: true }); // Cambia a false solo para depuración
+        const browser = await puppeteer.launch({ headless: false });
         const page = await browser.newPage();
         
         await page.setViewport({ width: 1200, height: 800 });
         console.log('Navegador abierto, navegando a la URL...');
         await page.goto('https://www.suraenlinea.com/soat/sura/seguro-obligatorio', { waitUntil: 'networkidle2', timeout: 60000 });
 
-        // Espera y cierra el modal si aparece
         try {
             console.log('Esperando al modal...');
             await page.waitForSelector('.sura-modal-button', { timeout: 10000 });
@@ -27,11 +26,9 @@ const scrapeAndStoreData = async (req, res) => {
             console.log('No se encontró el modal o no se pudo cerrar.');
         }
 
-        // Espera y verifica que el campo de entrada para la placa esté visible
         console.log('Esperando el campo de entrada para la placa...');
         await page.waitForSelector('#vehiculo-placa input', { visible: true, timeout: 20000 });
 
-        // Ingresa el valor en el campo de placa
         console.log('Ingresando la placa en el campo...');
         await page.evaluate((placa) => {
             const input = document.querySelector('#vehiculo-placa input');
@@ -42,36 +39,40 @@ const scrapeAndStoreData = async (req, res) => {
             }
         }, placa);
 
-        // Espera a que el botón de búsqueda sea visible e interactivo
-        console.log('Esperando el botón de búsqueda...');
-        await page.waitForSelector('#id-boton-cotizar', { visible: true, timeout: 20000 });
+        // Espera adicional para asegurar que el botón se habilite
+        await page.waitForTimeout(5000); // Espera de 5 segundos
 
-        // Asegúrate de que el botón está habilitado antes de hacer clic
+        console.log('Esperando el botón de búsqueda...');
+        await page.waitForSelector('#id-boton-cotizar', { visible: true, timeout: 15000 });
+
         console.log('Verificando si el botón de búsqueda está habilitado...');
         const isButtonEnabled = await page.evaluate(() => {
             const button = document.querySelector('#id-boton-cotizar');
-            return button && !button.hasAttribute('disabled');
+            return button && !button.disabled;
         });
 
         if (isButtonEnabled) {
             console.log('Botón de búsqueda habilitado, haciendo clic...');
-            await page.click('#id-boton-cotizar');
+            const buttonPosition = await page.evaluate(() => {
+                const button = document.querySelector('#id-boton-cotizar');
+                const rect = button.getBoundingClientRect();
+                return { x: rect.left + window.scrollX + (rect.width / 2), y: rect.top + window.scrollY + (rect.height / 2) };
+            });
+
+            await page.mouse.click(buttonPosition.x, buttonPosition.y);
         } else {
             console.log('El botón de búsqueda está deshabilitado.');
             await browser.close();
             return res.status(500).send('El botón de búsqueda está deshabilitado.');
         }
 
-        // Espera hasta que los resultados sean visibles
         console.log('Esperando los resultados...');
         await page.waitForSelector('.vehiculo-summary__value', { visible: true, timeout: 30000 });
 
-        // Extrae la información deseada del HTML de la página
         console.log('Extrayendo resultados...');
         const resultados = await page.evaluate(() => {
             const info = {};
 
-            // Información del vehículo
             const marcaElement = document.querySelector('#vehiculo-detail-marca');
             info.marca = marcaElement ? marcaElement.innerText : 'No se encontró la marca';
 
@@ -102,14 +103,12 @@ const scrapeAndStoreData = async (req, res) => {
             const vinElement = document.querySelector('#vehiculo-detail-vin');
             info.vin = vinElement ? vinElement.innerText : 'No se encontró el VIN';
 
-            // Información de descuentos
             const valorPagarElement = document.querySelector('.descuentos__total-price p:nth-of-type(2)');
             info.valorPagar = valorPagarElement ? valorPagarElement.innerText.trim() : 'No se encontró el valor a pagar';
 
             return info;
         });
 
-        // Incluye la placa al principio del objeto de resultados
         const resultadosConPlaca = { placa, ...resultados };
 
         console.log('Resultados del scraping:', resultadosConPlaca);
