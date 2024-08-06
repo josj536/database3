@@ -1,18 +1,18 @@
 import puppeteer from 'puppeteer-core';
+import chrome from 'chrome-aws-lambda';
 
 const scrapeAndStoreData = async (req, res) => {
     const { placa } = req.body;
-
-    console.log('Placa recibida:', placa);
 
     if (!placa) {
         return res.status(400).send('Placa es requerida');
     }
 
     try {
-        // Lanza Chromium con las opciones adecuadas
         const browser = await puppeteer.launch({
-            headless: true,
+            args: chrome.args,
+            executablePath: await chrome.executablePath,
+            headless: chrome.headless,
         });
         const page = await browser.newPage();
         
