@@ -1,5 +1,4 @@
 import puppeteer from 'puppeteer-core';
-import chrome from '@sparticuz/chrome';
 
 const scrapeAndStoreData = async (req, res) => {
     const { placa } = req.body;
@@ -14,7 +13,6 @@ const scrapeAndStoreData = async (req, res) => {
         // Lanza Chromium con las opciones adecuadas
         const browser = await puppeteer.launch({
             headless: true,
-            executablePath: chrome.executablePath(), // Usa el ejecutable proporcionado por @sparticuz/chrome
         });
         const page = await browser.newPage();
         
