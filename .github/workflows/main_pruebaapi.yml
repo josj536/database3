@@ -27,13 +27,11 @@ jobs:
           sudo apt-get install -y wget ca-certificates fonts-liberation libappindicator3-1 libnss3 lsb-release xdg-utils
           sudo apt-get install -y chromium-browser
 
-      - name: Install dependencies
-        run: |
-          npm install
+      - name: Install npm dependencies
+        run: npm install
 
-      - name: Install Puppeteer dependencies
-        run: |
-          npx puppeteer install
+      - name: Set environment variable for Puppeteer
+        run: echo "PUPPETEER_EXECUTABLE_PATH=$(which chromium-browser)" >> $GITHUB_ENV
 
       - name: Build and test
         run: |
