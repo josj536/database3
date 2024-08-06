@@ -30,14 +30,11 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-
-      - name: Install Puppeteer dependencies
-        run: |
           npx puppeteer install
 
       - name: Zip artifact for deployment
         run: zip -r release.zip ./*
-      
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -76,5 +73,4 @@ jobs:
           app-name: 'pruebaapi'
           slot-name: 'Production'
           package: .
-
           
