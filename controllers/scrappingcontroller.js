@@ -1,5 +1,4 @@
-import puppeteer from 'puppeteer-core';
-import chrome from 'chrome-aws-lambda';
+import puppeteer from 'puppeteer';
 
 const scrapeAndStoreData = async (req, res) => {
     const { placa } = req.body;
@@ -10,9 +9,7 @@ const scrapeAndStoreData = async (req, res) => {
 
     try {
         const browser = await puppeteer.launch({
-            args: chrome.args,
-            executablePath: await chrome.executablePath,
-            headless: chrome.headless,
+            headless: true,
         });
         const page = await browser.newPage();
         
