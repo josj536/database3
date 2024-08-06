@@ -1,3 +1,6 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
 name: Build and deploy Node.js app to Azure Web App - pruebaapi
 
 on:
@@ -17,14 +20,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-
-      - name: Install Chromium and Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser
-          sudo apt-get install -y libnss3 libatk-bridge2.0-0 libgtk-3-0
-          sudo apt-get install -y fonts-liberation libappindicator3-1 libasound2
-          sudo apt-get install -y libgbm1 libxkbcommon0
 
       - name: npm install, build, and test
         run: |
