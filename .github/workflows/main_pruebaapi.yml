@@ -16,13 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
-
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
@@ -78,6 +71,11 @@ jobs:
           app-name: 'pruebaapi'
           slot-name: 'Production'
           package: .
+
+      - name: Install Puppeteer dependencies
+        run: |
+          npm install puppeteer
+          npm install @sparticuz/chrome
 
 
 
